@@ -196,7 +196,16 @@ def dsf(B,A=None):
 
 
 def dsf2(B,A=None):
-   
+    #print("B:")
+    #print(B)
+    #print("Bend")
+    '''
+    B=B.rref()
+    global n
+    n=B.ncols()
+    while B[-1]==vector([0]*n):
+        B=B[:-1]
+    '''
     B2=B.stack(zero_matrix(n-B.nrows(), n))
 
     B2=B2.augment(identity_matrix(F,n))
@@ -1822,7 +1831,53 @@ def shortc2(C,pnc):
     #C6=Cp[:,:pnc].augment(Cp[:,pnc+1:])
     return Cp
 
+'''
+Cpr = random_matrix(F,kd,n)
+Cpr=dsf(Cpr)[1]
+pnc=[randrange(n),randrange(n)]
+print("Cpr:")
+#print(Cpr)
+#print(puncc2(Cpr,pnc))
+print(Cpr)
+print("pnc:")
+print(pnc)
+print("1:")
+C2=dualc2(Cpr)
+print("dualcpr:")
+print(C2)
+print("1.1")
+for p in pnc:
+    C2=shortc2(C2,p)
+print("short:")
+print(C2)
+print("1.2")
+C2=dsf(C2)[1]
+for p in pnc:
+    C2[p,p]=1
+print("1.3")
 
+print(C2)
+print("2:")
+C3=copy(Cpr)
+for p in pnc:
+    C3=puncc(C3,p)
+print("pc3:")
+print(C3)
+print("2.1")
+C3=dualc2(C3)
+print("dc3:")
+print(C3)
+print("2.2")
+C3=dsf(C3)[1]
+print("2.3")
+
+print(C3)
+print("C2")
+print(C2)
+print("C3")
+print(C3)
+assert C2==C3
+'''
 
 
 n,kd=128,64
@@ -1832,8 +1887,13 @@ GMM=[]
 rnd=100
 altref=1
 
-#example:
 
+def importedSSA(C1,C2):
+    C2=dsf(C2)[1]
+    pre=SSAprep(C2)
+    return SSA(C1,pre,C2)[0]
+    
+#example:
 '''
 Cpr = random_matrix(F,kd,n)
 Cpr=dsf(Cpr)[1]
@@ -1845,7 +1905,8 @@ debugpemr = Permutation(debugperm).to_matrix()
 debugpemr2= Permutation(debugperm).inverse().to_matrix()
 C3=C3*debugpemr
 debugperm2=[i-1 for i in debugperm]
-prem=SSA(C3,prip,Cpr)[0]
+#prem=SSA(C3,prip,Cpr)[0]
+prem=importedSSA(C3,Cpr)
 if type(prem) is not str:
     pmre=[i+1 for i in prem]
     pemr = Permutation(pmre).inverse().to_matrix()
@@ -1853,4 +1914,4 @@ if type(prem) is not str:
 else:
     print("result:",prem)
 '''
-    
+multilinecommentstringdeleter=1
